@@ -1,0 +1,47 @@
+In my module i have to deal with the document of user and the system produced document fot that i need to use
+Tech
+For storing document metadata :- postgresql
+For storing original document :- mongo(gridFs Template)
+
+While we get the Document from user means if it is uploaded by the user i need to perform several task
+
+First i need to perform basic validation such as
+-->file should not empty
+-->file size
+-->file type (PDF,jpeg,img)
+
+for this i have created one class name File validator where i have checked this all basic concerns related
+to encountering file .
+
+For preventing duplicate document from user we have calculate the hash of file
+1-> First we take the file from user after that we converts that file into byte by using getByte() method
+2->Then MessageDigest it is class which has used for perform cryptography hashing.
+   we use to method first is getInstance(here we pass the algo trough we want to perform hashing)
+   after that through MessageDigest instance we call digest method which will perform the hashing we
+   give the byte formated file it also produces the hash in byte after that we convert them into string
+
+
+Then we have create custom method that will get the document metadata from database if document is present
+we throw the exception Duplicate document not allowed
+
+else we wil proceed
+
+after that if file is user uploaded
+
+gridFs template to store the file in mongo db
+Here GridFs template store the file in chunks and also store document details in file
+-->fs.chunks: where original document will store
+-->fs.file: where details about document will store in db
+
+and after saving the document it will return the gridFs id
+
+then wee will saving the metadata of the document in postgres and also store the gridfs id which is uses when
+we want to download the document
+
+after that we will start the OCR (optimal character recognization ) it will extract the text from the document
+and also store in db
+OCR process will be async process in the background will happens.
+
+
+
+
